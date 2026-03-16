@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.16)  16 MAR 2026 05:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.16)  16 MAR 2026 13:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -278,12 +278,12 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
 
  (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 
 
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -303,10 +303,10 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 2791 strings out of 469006
- 39929 string characters out of 5454813
- 458834 words of memory out of 5000000
- 31472 multiletter control sequences out of 15000+600000
+ 2789 strings out of 469006
+ 39907 string characters out of 5454813
+ 458749 words of memory out of 5000000
+ 31470 multiletter control sequences out of 15000+600000
  641570 words of font info for 73 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  57i,11n,65p,1435b,351s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -331,9 +331,9 @@ m/cmr7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts
 onts/cm/cmsy7.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmsy9.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msam7.pfb>
-Output written on samplepaper.pdf (16 pages, 223246 bytes).
+Output written on samplepaper.pdf (16 pages, 222228 bytes).
 PDF statistics:
- 594 PDF objects out of 1000 (max. 8388607)
+ 593 PDF objects out of 1000 (max. 8388607)
  99 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
