@@ -10,7 +10,7 @@
 \begin{document}
 
 \title{A Systematic Literature Review of Large Language Models and Small Language Models in Hybrid, Multi-Agent, and Monolithic Architectures}
-\titlerunning{SLR of Large and Small Language Models}
+\titlerunning{Systematic Review of LLMs and SLMs}
 
 \author{Author One \and Author Two}
 \authorrunning{A. One and A. Two}
@@ -21,88 +21,111 @@
 \maketitle
 
 \begin{abstract}
-This paper presents a systematic literature review on large language models (LLMs) and small language models (SLMs), with particular attention to monolithic, hybrid, and multi-agent architectures. The review is organized around four research questions covering comparative performance, computational efficiency, orchestration mechanisms, and domain suitability. Following a PRISMA 2020-guided review design and a Web of Science-centered search strategy, the study synthesizes evidence from 54 papers and extracts structured information on model types, architectural patterns, tasks, datasets, baselines, metrics, latency, cost, energy, key findings, and limitations. In contrast to prior surveys, this manuscript emphasizes domain-specific applications and cross-study quantitative synthesis. The current version is written as a paper scaffold that can be extended with final numbers, citations, and discussion during manuscript completion.
+Large language models (LLMs) now define the state of the art in many reasoning, generation, and decision-support tasks, but their deployment cost, energy demand, latency, and hardware requirements remain substantial. Small language models (SLMs) provide an attractive alternative for edge deployment, privacy-sensitive settings, and task-specific optimisation, yet their capabilities are uneven across domains. This paper presents a systematic literature review of 54 studies on LLMs, SLMs, and SLM--LLM collaboration, with emphasis on hybrid, multi-agent, retrieval-centered, and monolithic architectures. The review is guided by four research questions addressing comparative performance, computational efficiency, orchestration mechanisms, and domain suitability. Using a PRISMA 2020-guided review design and a Web of Science-centered search process, we synthesize evidence on model choices, architectural patterns, datasets, metrics, baselines, latency, cost, energy, and reported limitations. The reanalysis of the corpus shows a strong shift toward hybrid and multi-agent designs together with a clear reporting asymmetry in which accuracy is common but cost and energy are rarely quantified. The findings indicate that SLMs are most competitive when they are paired with routing, retrieval, planning, or fusion mechanisms and when the problem space is narrow, structured, or domain-specific.
 
-\keywords{systematic literature review \and large language models \and small language models \and hybrid architectures \and multi-agent systems}
+\keywords{systematic literature review \and large language models \and small language models \and hybrid architectures \and multi-agent systems \and edge-cloud inference}
 \end{abstract}
 
 \section{Introduction}
-Large language models have achieved strong results across reasoning, generation, and decision-support tasks, but they often require substantial computational resources, inference cost, and energy. Small language models offer a promising alternative for edge deployment, privacy-sensitive workflows, and cost-aware applications, yet their performance is often task-dependent. This creates a growing research interest in comparing monolithic LLMs with standalone SLMs as well as hybrid and multi-agent systems that combine both model families.
+Large language models have transformed natural language processing by making strong zero-shot and few-shot performance feasible across reasoning, summarisation, dialogue, code generation, and multimodal tasks. At the same time, their practical deployment remains constrained by memory footprint, inference latency, cloud dependency, and monetary cost. These constraints are especially pronounced in edge devices, real-time systems, privacy-sensitive domains, and industrial environments where model quality is only one part of the design problem.
 
-This paper studies how SLMs and LLMs are used in hybrid, collaborative, and monolithic settings. The goal is not only to compare raw predictive performance, but also to understand the architectural choices, orchestration mechanisms, and practical trade-offs that make these systems effective in different application domains.
+Small language models have therefore emerged as a complementary rather than purely competing paradigm. They are attractive because they can run locally, are often cheaper to adapt, and can be integrated more easily with domain-specific retrieval, task-specific fine-tuning, or explicit control modules. However, SLMs do not provide a uniform answer to the limitations of LLMs. In many settings they still underperform on open-ended reasoning, long-context understanding, or tasks that require broad world knowledge. The resulting design space is no longer a simple LLM-versus-SLM comparison. Instead, the field increasingly studies when to use an SLM alone, when to escalate to an LLM, and how to coordinate both in a hybrid or agentic pipeline.
+
+The current literature already contains many examples of this shift, including edge-cloud collaborative inference~\cite{hao2024hybrid}, uncertainty-aware speculative decoding~\cite{oh2025uncertainty}, telecom RAG~\cite{alabbasi2024teleoracle}, structured expert routing~\cite{lee2024orchestrallm}, on-device hybrid agents~\cite{shao2025dot}, multimodal industrial monitoring~\cite{cao2025enersafe}, and feedback-guided prompt optimisation~\cite{amarasinghe2025fipo}.
+
+These developments make a systematic review timely for three reasons. First, the literature is growing rapidly and is no longer limited to one type of collaboration mechanism. Second, the most important claims in the area are no longer only about accuracy, but also about compute, latency, cost, and deployability. Third, prior surveys tend to emphasize taxonomy and conceptual coverage, whereas system builders and researchers increasingly need a cross-study synthesis that clarifies what kinds of hybridization work, under what conditions, and with what trade-offs.
+
+This paper therefore asks a narrower and more engineering-focused question than a generic survey of language models. Rather than describing all possible SLM or LLM techniques, it investigates how SLMs and LLMs interact in recent systems, what orchestration patterns recur across the literature, and in which domains SLM-centered designs can realistically substitute for or complement larger models. The review pays particular attention to hybrid and multi-agent architectures because these systems are where the resource-performance trade-off becomes explicit.
 
 The main contributions of this review are as follows:
 \begin{itemize}
-\item It provides a structured overview of recent work on SLMs, LLMs, and SLM--LLM collaboration.
-\item It frames the literature around performance, efficiency, orchestration, and domain suitability.
-\item It uses a reproducible review structure aligned with PRISMA 2020 and a Web of Science-based search process.
-\item It synthesizes extracted evidence from 54 studies with a focus on quantitative outcomes such as accuracy, latency, cost, and energy.
+\item It provides a structured synthesis of 54 studies covering standalone SLMs, monolithic LLMs, hybrid SLM--LLM systems, multi-agent workflows, ensembles, and retrieval-centered architectures.
+\item It reframes the literature around four practical research questions: performance, efficiency, orchestration, and domain suitability.
+\item It translates the review website's extracted matrix into an analyzable corpus profile, including publication trends, architectural distributions, and reporting coverage for latency, cost, and energy.
+\item It strengthens broad corpus-level synthesis with representative primary studies whose PDFs were inspected to recover richer architectural and evaluation context.
 \end{itemize}
 
 \subsection{Research Questions}
 The review is guided by the following research questions:
 \begin{enumerate}
-\item \textbf{RQ1:} How does the performance (accuracy/efficacy) of multi-agent SLMs or hybrid architectures (LLM + SLM) compare to single monolithic LLMs in specific reasoning and classification tasks?
-\item \textbf{RQ2:} What is the impact of hybrid and multi-agent architectures on computational efficiency, specifically regarding inference cost, latency, and energy consumption, compared to monolithic models?
-\item \textbf{RQ3:} What orchestration and routing mechanisms are employed to manage the division of labor between large and small models in hybrid systems?
-\item \textbf{RQ4:} In which specific domains do SLMs achieve performance comparable to LLMs, and where do they fail?
+\item \textbf{RQ1:} How does the performance of multi-agent SLMs or hybrid architectures (LLM + SLM) compare to single monolithic LLMs in reasoning, classification, and domain-specific tasks?
+\item \textbf{RQ2:} What is the impact of hybrid and multi-agent architectures on computational efficiency, especially inference cost, latency, and energy consumption, compared with monolithic models?
+\item \textbf{RQ3:} What orchestration, routing, retrieval, and decomposition mechanisms are used to manage the division of labor between large and small models?
+\item \textbf{RQ4:} In which domains do SLMs achieve performance comparable to LLMs, and in which domains do they still depend on escalation, retrieval, or strong hybrid support?
 \end{enumerate}
 
 \section{Related Works}
 \subsection{Existing Systematic Literature Reviews and Surveys}
-Recent literature already includes several reviews on SLMs and SLM--LLM collaboration. The closest methodological competitor is a PRISMA-based systematic review on small language models that covers studies published up to early 2025. Other narrative surveys examine SLM definitions, trustworthiness, collaboration mechanisms, edge-cloud deployment, and cost issues. These studies are useful for terminology, architectural taxonomies, and broad thematic coverage.
+The project website identifies five especially relevant prior reviews. The closest methodological competitor is the PRISMA-based SLR on small language models available on the project website. It is the nearest precursor because it combines a transparent review process with a broad overview of SLM research. However, it remains broader than the present study: its main focus is the SLM landscape itself, whereas our review centers on the relationship between SLMs, LLMs, and hybrid architectures.
 
-However, most existing works remain narrative rather than fully systematic. Even when they overlap with this review's scope, they often emphasize conceptual taxonomies over transparent screening, reproducible inclusion decisions, and cross-study metric synthesis.
+The remaining relevant works are mostly narrative or semi-systematic surveys. \emph{A Comprehensive Survey of Small Language Models in the Era of LLMs} provides wide coverage of definitions, training methods, applications, collaboration, and trustworthiness, but it does not follow a reproducible selection protocol. \emph{A Survey on Collaborative Mechanisms Between Large and Small Language Models} offers a technically valuable taxonomy of routing, auxiliary, fusion, and distillation strategies, especially for edge deployment, but its scope is mechanism-centered rather than corpus-centered. \emph{A Survey on Collaborating Small and Large Language Models for Performance, Cost-effectiveness, Cloud-edge Privacy, and Trustworthiness} overlaps substantially with the current review's themes, yet its methodology is still narrative rather than PRISMA-guided. Finally, \emph{Collaborative Inference and Learning between Edge SLMs and Cloud LLMs} provides systematic organization of post-2023 edge-cloud work, but it is intentionally narrow in deployment context.
 
-\subsection{Gaps in Prior Literature}
-The review website and related-works analysis highlight four main gaps in prior literature. First, many surveys focus on routing, distillation, or collaboration mechanisms without emphasizing domain-specific applications. Second, most related studies do not combine PRISMA-style reporting with a clearly reproducible database-driven selection process. Third, previous reviews have weaker temporal coverage of the most recent SLM/LLM studies. Fourth, they rarely synthesize raw quantitative indicators such as latency, cost, and energy in a comparable way.
+What emerges from these prior reviews is not a lack of attention to SLMs or collaboration, but a difference in analytical emphasis. Previous surveys often answer the question ``What kinds of SLMs or collaboration mechanisms exist?'' The present review instead asks ``What patterns actually recur across recent primary studies, how do they affect performance and efficiency, and which domains benefit most from hybridization?'' This difference is important because the research problem has shifted from model cataloguing to system design.
 
-\subsection{What This Study Does Differently}
-This review positions itself as a PRISMA-guided systematic literature review that focuses on domain-specific applications of SLM--LLM systems while also synthesizing quantitative performance evidence. Compared with prior surveys, the study contributes a more explicit research protocol, a clearer mapping from research questions to extraction fields, and a stronger emphasis on measurable trade-offs across architectures.
+\subsection{Main Gaps in the Existing Review Literature}
+The review website's comparative analysis surfaces four recurring gaps, all of which are visible in the primary studies as well.
+
+First, application domains are underemphasized relative to architecture taxonomies. Prior surveys are strong on categories such as routing, distillation, and cloud-edge cooperation, but weaker on a systematic comparison of concrete domains such as telecom question answering, radiology reporting, optimisation modelling, dialogue state tracking, or industrial video captioning. This matters because whether an SLM is ``good enough'' depends heavily on task structure and domain constraints.
+
+Second, most related works are narrative surveys rather than transparent systematic reviews. Narrative surveys are useful for breadth and conceptual framing, but they make it harder to reproduce study selection, audit exclusions, and compare cross-study evidence using a consistent extraction schema.
+
+Third, prior reviews often stop before the newest wave of 2025 and early-2026 papers that focus on on-device agents, uncertainty-aware inference, prompt optimisation, multimodal collaboration, and energy-aware routing. Because this area evolves rapidly, even a one-year gap meaningfully changes the architectural picture.
+
+Fourth, quantitative synthesis remains thin. Prior surveys usually discuss performance, efficiency, and privacy conceptually, but they rarely align cross-study indicators such as latency in milliseconds, API cost, FLOP reduction, or energy-per-token. This limits their practical usefulness for system builders who need to make deployment decisions rather than only understand the research landscape.
+
+\subsection{Positioning of This Study}
+This review is positioned as a methodologically explicit and engineering-oriented synthesis of SLM--LLM systems. It differs from prior work in three ways. First, it treats domain suitability as a first-class analytical axis rather than a side effect of architectural categories. Second, it explicitly maps research questions to extraction fields so that claims about performance, efficiency, and orchestration remain traceable to the underlying evidence. Third, it combines broad corpus-level analysis with representative deep dives into primary papers, which is necessary because the dataset's ``key findings'' fields are valuable for synthesis but too compressed to fully explain why a design works.
+
+The website's own framing is also instructive: it argues that the review should be seen as a PRISMA-guided study of domain-specific applications of SLM--LLM hybrid architectures that emphasizes quantitative performance metrics. Our reanalysis supports this framing. In the current corpus, the most consequential papers are not simply ``about small models'' or ``about collaboration'' in the abstract; they are about domain-grounded deployment strategies under resource constraints.
 
 \section{Research Methodology}
 \subsection{Review Protocol}
-The study follows a PRISMA 2020-guided review design. The search process is centered on Web of Science and uses Boolean search strings that combine the core concepts of small language models, large language models, hybrid architectures, multi-agent systems, orchestration, and collaboration. Retrieved records are deduplicated, screened at title and abstract level, assessed at full-text level, and then included only if they satisfy the predefined criteria.
+The study follows a PRISMA 2020-guided review design~\cite{page2021prisma}. The workflow used on the review website separates the process into identification, screening, and inclusion, with explicit reference to a Web of Science-centered search strategy. In the identification phase, query construction combines the key concepts of ``small language models'', ``large language models'', ``hybrid architectures'', ``multi-agent systems'', ``orchestration'', and ``collaboration'' using Boolean operators. In the screening phase, records are deduplicated, reviewed at title and abstract level, and then assessed at full text. In the inclusion phase, the selected studies are coded into a structured extraction sheet and then used to answer the research questions.
 
-The review workflow can be summarized in three stages:
-\begin{enumerate}
-\item \textbf{Identification:} database search, query construction, and deduplication.
-\item \textbf{Screening:} title/abstract filtering and full-text eligibility assessment.
-\item \textbf{Inclusion:} final study selection, structured extraction, and quality assessment.
-\end{enumerate}
+The website also makes an important methodological choice explicit: the review is not organized as a generic survey of all SLM work, but as a filtered corpus intended to support a comparison between monolithic, hybrid, and agentic designs. This matters because it shapes both what is included and how the findings are interpreted. Studies are not only selected because they use small models; they are selected because they help answer questions about comparative performance, orchestration, and efficiency.
 
 \subsection{Inclusion and Exclusion Criteria}
-The inclusion criteria used in the review are:
-\begin{itemize}
-\item studies that examine SLMs alone or compare SLM + LLM systems in hybrid or multi-agent settings;
-\item studies that use models with fewer than 7 billion parameters for the SLM component;
-\item studies that focus on at least one of performance, latency, memory usage, agent collaboration, or orchestration;
-\item studies published within the final review window for recent SLM/LLM research;
-\item studies with empirical or experimental evaluation based on benchmarks or domain datasets.
-\end{itemize}
+The inclusion criteria extracted from the website can be summarized as follows. A study is included if it examines SLMs alone or SLM + LLM architectures, fits the project's small-model definition, focuses on at least one relevant technical question such as performance or orchestration, falls inside the contemporary review window, and provides empirical evaluation. These criteria are narrow enough to keep the corpus technically coherent while broad enough to admit retrieval-centered, multi-agent, and fusion-based systems.
 
-The exclusion criteria used in the review are:
-\begin{itemize}
-\item studies that compare only large monolithic LLMs without an SLM component;
-\item closed-box or API-only studies where the model size or architecture is not transparent;
-\item papers focused only on ethical, sociological, legal, or regulatory discussion without technical evaluation;
-\item papers outside the review time window;
-\item purely theoretical papers without experiments or quantitative validation.
-\end{itemize}
+The exclusion criteria remove five types of work: purely large-model comparisons with no SLM component, closed-box studies with insufficient transparency, non-technical ethical or regulatory discussions with no technical validation, studies outside the review time window, and purely theoretical work without experiments. Together, these choices bias the corpus toward deployable systems and measured outcomes, which is appropriate for the present research questions.
 
-% Verify the final search end date before submission.
-% The project materials currently mention both 2025 and 2026 in different places.
+\subsection{Corpus Profile}
+The current website snapshot contains 54 reviewed papers. The corpus is strongly concentrated in 2025, with 38 studies from that year, 11 from 2024, 2 from 2026, and a very small remainder in 2023 or metadata-anomalous records.
 
-\subsection{Data Extraction and Synthesis}
-For each included study, the review extracts the SLM and LLM models used, architecture type, orchestration method, agent count, task type, dataset, metrics, baselines, accuracy, latency, cost, energy, key findings, and limitations. These fields are then mapped to the research questions to support a structured narrative synthesis.
+Architecturally, the corpus is not dominated by one single paradigm. Using the website's own filtering logic, 18 papers can be grouped as hybrid, 14 as single-model systems, 12 as multi-agent systems, 6 as ensembles, and 4 as RAG-centered systems. This matters because it shows that the field is not converging on a single ``best'' way to combine small and large models. Instead, the literature currently explores multiple control granularities, ranging from token-level speculative verification to query-level routing, sub-task decomposition, and representation fusion.
 
-The extracted evidence is analyzed with two complementary goals. First, the review identifies architectural and orchestration patterns across the literature. Second, it compares the quantitative outcomes reported by the studies, especially where papers provide direct performance, latency, cost, or energy values.
+The corpus also reveals a strong reporting asymmetry. Accuracy or task-quality measures are reported in 51 of the 54 studies. In contrast, latency is reported in only 17, cost in only 5, and energy in only 4. This imbalance is central to interpreting the literature. Many papers claim efficiency benefits, but only a small subset actually report the variables needed to compare those claims rigorously across studies.
+
+\subsection{Data Extraction and Synthesis Strategy}
+For each study, the website records the SLM and LLM models used, architecture type, orchestration method, agent count, task type, dataset, evaluation metrics, baselines, accuracy, latency, cost, energy, key findings, and limitations. These fields are sufficient for a structured narrative synthesis because they capture both the functional design of the system and the evidence used to justify it.
+
+The present manuscript uses that matrix in two steps. First, it performs corpus-level synthesis based on counts, categories, and recurring patterns across all 54 studies. Second, it supplements the compressed extraction fields with PDF-level inspection of representative papers where deeper context was needed. This second step was necessary for a conference-ready text because ``key findings'' alone are often too short to explain whether a method works because of routing, retrieval, task decomposition, multimodal fusion, or evaluation design.
 
 \section{Table}
-Table~\ref{tab:rq-matrix} presents the RQ $\times$ data extraction matrix used in the review protocol. A check mark indicates that the extraction field directly supports answering the corresponding research question.
+This section consolidates the tables that support the review narrative. Table~\ref{tab:corpus-overview} summarizes the corpus profile, Table~\ref{tab:rq-matrix} maps research questions to extraction fields, and Table~\ref{tab:representative-studies} lists representative primary studies with concrete quantitative outcomes.
 
 \begin{table}
-\caption{RQ $\times$ data extraction matrix used in the review.}
+\caption{Corpus overview derived from the 54-paper website snapshot.}
+\label{tab:corpus-overview}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}X@{}}
+\toprule
+\textbf{Aspect} & \textbf{Observation} \\
+\midrule
+Corpus size & 54 reviewed papers. \\
+Publication trend & 2025 dominates the corpus (38 papers), followed by 2024 (11 papers). A very small remainder falls in 2023, 2026, or metadata-anomalous records. \\
+Architecture split & Hybrid: 18, Single-model: 14, Multi-agent: 12, Ensemble: 6, RAG-centered: 4. \\
+Most frequent SLM families & Llama, Qwen, BERT-family models, Phi, Mistral, T5, and Gemma appear most often in the extracted studies. \\
+Most frequent LLM families & GPT-4/GPT-4o, Llama, Qwen, GPT-3.5, Claude, and Gemini dominate the LLM side of the corpus. \\
+Reporting coverage & Accuracy/task quality: 51 papers; latency: 17; cost: 5; energy: 4. \\
+Recurring domains & Telecom QA, healthcare and radiology, mathematical reasoning, code and software tasks, dialogue systems, education, scientific prediction, and multimodal industrial monitoring. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}
+\caption{RQ $\times$ data extraction matrix used in the review. A check mark indicates that the field directly supports the corresponding research question.}
 \label{tab:rq-matrix}
 \centering
 \scriptsize
@@ -130,47 +153,168 @@ Limitations &  & $\checkmark$ & $\checkmark$ &  \\
 \end{tabularx}
 \end{table}
 
+\begin{table}
+\caption{Representative primary studies used to deepen the review narrative.}
+\label{tab:representative-studies}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{2.5cm}X@{}}
+\toprule
+\textbf{Study} & \textbf{Task / Setting} & \textbf{Representative Result} \\
+\midrule
+Hybrid SLM and LLM for Edge-Cloud Collaborative Inference~\cite{hao2024hybrid} & GSM8K, HumanEval, NaturalQuestions & Achieves LLM-comparable quality on GSM8K while using 25.8\% of full-cloud LLM cost; only about 3\% of tokens require LLM verification. \\
+Uncertainty-Aware Hybrid Inference~\cite{oh2025uncertainty} & On-device speculative inference & Preserves up to 97.54\% of LLM accuracy, reduces uplink transmissions and LLM computations by 45.93\%, and improves token throughput by 2.54$\times$. \\
+OrchestraLLM~\cite{lee2024orchestrallm} & Dialogue state tracking & Outperforms both SLM and LLM baselines while reducing computational cost by more than 50\%. \\
+TeleOracle~\cite{alabbasi2024teleoracle} & Telecom question answering & Improves Phi-2 to 81.20\% accuracy, roughly 30\% better than the base model, while remaining highly faithful to retrieved telecom context. \\
+Division-of-Thoughts~\cite{shao2025dot} & On-device agents and reasoning & Reduces average reasoning time by 66.12\% and API cost by 83.57\% while maintaining competitive task accuracy. \\
+EnerSafe-Cap~\cite{cao2025enersafe} & Industrial video captioning & Improves over SwinBERT by 19.49 SBERT points and over Qwen2-VL-2B by 8.27 SBERT points on VATEX. \\
+Mixed Distillation~\cite{li2024mixed} & Mathematical reasoning & Distilled 7B models outperform GPT-3.5-Turbo on SVAMP after combining CoT and PoT supervision signals. \\
+FIPO~\cite{amarasinghe2025fipo} & Automated optimisation problem formulation & Raises Qwen-2.5 performance from 3\% to 54\% on LPWP via feedback-guided prompt optimisation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \section{Findings}
-\subsection{RQ1: Performance of Hybrid and Multi-Agent Systems}
-The reviewed studies suggest that hybrid and multi-agent systems often approach, match, or in some domain-specific tasks outperform monolithic baselines. This is especially visible when SLMs are paired with stronger routing, retrieval, verification, or fusion mechanisms. The strongest evidence appears in tasks such as domain question answering, dialogue state tracking, molecular prediction, and task-specific reasoning benchmarks.
+\subsection{Corpus-Level Trends Before the RQ Analysis}
+Before answering the four research questions directly, three corpus-level observations are worth emphasizing.
 
-At the same time, performance gains are not uniform across all settings. Many improvements depend on carefully designed pipelines, high-quality retrieval, or LLM support at critical decision points. This indicates that the architecture alone is not sufficient; the coordination strategy is often the main driver of success.
+First, the field is now primarily a systems literature rather than a pure model-scaling literature. Although a few studies still compare standalone small and large models directly, the dominant trend is to embed them inside a larger control strategy. Hybrid edge-cloud pipelines, retrieval-centered systems, expert routers, task decomposers, self-reflective workflows, and fusion modules are now common design choices. In other words, recent work increasingly treats model scale as one variable in a broader systems problem.
 
-\subsection{RQ2: Efficiency, Cost, Latency, and Energy}
-Efficiency is one of the central motivations for using SLMs and hybrid systems. Several studies report meaningful savings in cloud usage, routing load, or total computational cost while preserving acceptable performance. Hybrid designs are particularly attractive when only a small fraction of requests or tokens require escalation to the larger model.
+Second, hybridization is motivated by different constraints in different domains. In telecom and networking, the main concerns are deployment, context fidelity, and latency budgets. In healthcare and scientific tasks, the dominant concerns are reliability, interpretability, and domain specificity. In industrial monitoring, multimodal hybridization is driven by the need to combine coarse global understanding with fine-grained local detail. In optimisation and education, hybrid methods often serve as a way to recover reasoning quality from small models through feedback, routing, or targeted prompting.
 
-However, the literature also exposes an important reporting weakness: latency, cost, and energy are not consistently reported in directly comparable units. Cost reductions are described more frequently than detailed energy measurements, and many papers discuss latency qualitatively rather than providing standardized timings. This limits cross-study comparability and should be emphasized in the final manuscript.
+Third, the evidence base is uneven. Accuracy is almost always reported; compute, latency, and cost are not. This matters because a large share of the literature frames hybridization as an efficiency solution, yet only a minority of studies expose sufficiently comparable numbers to test those claims rigorously. The result is a literature that often proves that hybridization \emph{can} work, but less often proves how much it costs in practice under standardized conditions.
+
+\subsection{RQ1: Comparative Performance of Hybrid and Multi-Agent Systems}
+Across the corpus, hybrid and multi-agent architectures generally improve the performance ceiling of SLM-centered systems and, in several cases, also outperform larger monolithic baselines. The main reason is not that small models suddenly become universally strong, but that coordination mechanisms route the right subtasks, tokens, or contexts to the right component at the right moment.
+
+The clearest evidence comes from edge-cloud collaboration. Hao et al.~\cite{hao2024hybrid} show that token-level draft-verification can recover LLM-like quality on GSM8K while using only 25.8\% of the full-cloud LLM cost. Their abstract and introduction clarify why this works: many tokens are easy enough for the on-device SLM, and only a small subset of difficult tokens must be verified or regenerated in the cloud. The key performance implication is that quality recovery does not require whole-query escalation. Token-level selectivity is enough.
+
+This pattern also appears in wireless and mobile settings. Oh et al.~\cite{oh2025uncertainty} frame hybrid inference as a distributed speculative-decoding problem and show that uncertainty-aware skipping can preserve up to 97.54\% of LLM accuracy. Their work is especially important for the present review because it ties performance directly to a measurable systems lever: if the SLM can estimate when its token is likely to be accepted, then the system can skip unnecessary communication and cloud inference without losing much quality.
+
+Routing can do more than merely preserve LLM quality. In dialogue state tracking, OrchestraLLM uses a retrieval-based router to select the most suitable expert among SLM and LLM pools~\cite{lee2024orchestrallm}. The website extraction reports 82.46\% turn-level joint goal accuracy on MultiWOZ and 68.09\% on SGD, outperforming both the LLM and SLM baselines. The corresponding PDF makes the reason more explicit: SLMs and LLMs exhibit complementary strengths, with SLMs handling schema and formatting constraints well and LLMs contributing commonsense and broader contextual reasoning. This is an example of a hybrid system exceeding both ends of the scale spectrum because the system exploits complementarity rather than averaging behavior.
+
+Domain-specific retrieval produces similarly strong results. TeleOracle adapts Phi-2 to telecom question answering by combining fine-tuning, semantic chunking, hybrid retrieval, reranking, and context-window extension~\cite{alabbasi2024teleoracle}. In the reviewed corpus, this system reaches 81.20\% accuracy, which is roughly 30\% above the base Phi-2 model and competitive with much larger models. The PDF-level introduction is helpful here because it explains that telecom concepts can conflict with general-language usage. In such a setting, a small model supported by domain retrieval can outperform a larger but poorly grounded general-purpose model.
+
+The reviewed literature also shows that hybridization is not limited to text-only inference. In EnerSafe-Cap, a lightweight video-language model and a multimodal large model are combined through dual-path sampling and prompt-guided fusion for industrial safety monitoring~\cite{cao2025enersafe}. This multimodal setting matters because it demonstrates that hybrid language-model design is also a coordination strategy over different visual abstractions. The lightweight path captures broad continuity, while the larger model focuses on key fine-grained moments. The performance gains over both SwinBERT and Qwen2-VL-2B suggest that hybridization can improve caption quality when different modalities or sampling strategies emphasize genuinely different information.
+
+Several studies in the corpus further show that performance recovery can come from indirect support rather than direct LLM invocation at inference time. Mixed Distillation uses both Chain-of-Thought and Program-of-Thought supervision to transfer reasoning competence into smaller models~\cite{li2024mixed}. In the reviewed data, the resulting 7B models outperform GPT-3.5-Turbo on SVAMP. Likewise, FIPO does not simply ask an LLM to solve the task directly; instead, it uses feedback-guided prompt optimisation to improve small-model problem formulation in mathematical optimisation~\cite{amarasinghe2025fipo}. The result is a dramatic increase in Qwen-2.5 performance from 3\% to 54\% on LPWP. These examples show that hybridization can occur at the training-time or prompt-evolution level, not only at test-time inference.
+
+Despite these positive results, the corpus does not support a simplistic conclusion that SLMs have ``caught up'' to LLMs in general. The strongest comparative results tend to appear in settings where at least one of the following is true: the task is domain-specific, the context can be retrieved and constrained, the output structure is well defined, the system can decompose the problem into sub-parts, or escalation is possible when uncertainty is high. By contrast, open-ended reasoning, general medical question answering, and long-context understanding remain much harder for small models when those supporting conditions are absent.
+
+\subsection{RQ2: Efficiency, Cost, Latency, and Energy Trade-offs}
+The corpus strongly suggests that efficiency is one of the main motivations for SLM--LLM collaboration, but it also reveals that the evidence base is much weaker here than in pure performance evaluation. Out of 54 papers, 51 report task-quality measures, while only 17 report latency, 5 report cost, and 4 report energy. This asymmetry is itself a finding: hybrid systems are often justified as efficient, but only a minority of studies provide directly comparable measurements of that efficiency.
+
+When cost is reported, the numbers are often compelling. Hao et al.~\cite{hao2024hybrid} reduce cloud cost to 25.8\%--31.2\% of full LLM inference across three benchmark settings by escalating only a small subset of difficult tokens. Division-of-Thoughts reports 83.57\% lower API cost while maintaining competitive accuracy on reasoning and web-agent tasks~\cite{shao2025dot}. Token-level routing for edge devices, according to the website extraction, routes fewer than 7\% of tokens to the cloud and claims more than 80\% cost reduction relative to full LLM inference. These numbers point to a consistent design pattern: the largest savings come from selective escalation rather than from shrinking the entire pipeline.
+
+Latency evidence is more complex. U-HLM is one of the clearest papers because it reports both local and remote timing and links them to communication overhead~\cite{oh2025uncertainty}. The SLM takes 24.6 ms and the LLM 104.6 ms in the reported setup, and uncertainty-aware skipping improves throughput by 2.54$\times$. Division-of-Thoughts improves average reasoning time by 66.12\% through sub-task parallelism and selective allocation~\cite{shao2025dot}. In contrast, multimodal collaboration may improve accuracy at the cost of much slower per-instance processing: EnerSafe-Cap reports approximately 19--29 seconds per video. These examples show that ``hybrid'' does not imply low latency by default. The latency effect depends on the granularity of cooperation and the burden of the coordination mechanism.
+
+The reviewed PDFs also help explain why latency behaves differently across systems. In hybrid edge-cloud inference, latency overhead comes from token verification and communication. In U-HLM, the dominant bottleneck is vocabulary-distribution upload and repeated model evaluation. In OrchestraLLM, compute savings are reported in FLOPs rather than milliseconds because the router adds negligible cost relative to LLM execution~\cite{lee2024orchestrallm}. In TeleOracle, the website notes that cross-encoder reranking is the latency bottleneck even though the core generator is small. The important systems lesson is that hybrid design moves cost around; it does not eliminate it.
+
+Energy is the least mature evaluation axis in the corpus. Only four papers report energy-related information at all, and only two provide clearly numeric values. One reviewed paper on energy-per-token argues that a small model using Chain-of-Thought can be less energy-efficient than a larger model without such prompting. Another networking paper reports strong resource savings in near-real-time loops. These sparse reports are enough to show that energy cannot be inferred directly from parameter count, but they are not enough to support a high-confidence cross-study conclusion.
+
+Overall, the efficiency evidence supports a cautious but clear synthesis. Hybridization is most beneficial when it suppresses unnecessary large-model calls, narrows the search space, or avoids sending every token, query, or subtask to the cloud. Efficiency gains are weakest or hardest to interpret when the coordination layer adds expensive retrieval, reranking, debate, or multimodal processing that is not itself measured carefully. A mature literature on SLM--LLM systems will therefore need standardized reporting for latency, cloud usage, API cost, and energy, not just accuracy.
 
 \subsection{RQ3: Orchestration and Routing Mechanisms}
-The reviewed corpus shows several recurring orchestration mechanisms: speculative decoding, draft-and-verify pipelines, retrieval-augmented generation, expert routing, uncertainty-aware delegation, prompt-guided fusion, and feature-level fusion. These mechanisms differ in granularity. Some operate at token level, others at query level, and others at the representation or module level.
+The corpus contains a broad set of orchestration mechanisms, but they can be organized into a small number of recurring families. This taxonomy is important because the strongest papers in the review differ less by absolute model size than by how effectively they divide labor.
 
-The main design principle is division of labor. SLMs are frequently used for low-cost drafting, local inference, retrieval support, or constrained subtasks, whereas LLMs are used for verification, complex reasoning, or difficult edge cases. This suggests that orchestration is a first-class research problem in hybrid language model systems.
+\paragraph{Token-level collaboration.}
+Token-level orchestration appears in speculative or verification-based systems. Hybrid edge-cloud collaborative inference uses the SLM as a drafter and the LLM as a verifier on hard tokens~\cite{hao2024hybrid}. U-HLM adds an uncertainty-aware skipping mechanism so that even this token-level handshake is avoided whenever the SLM's token is likely to be accepted~\cite{oh2025uncertainty}. Token-level routing is powerful because it preserves fine control over quality, but it can suffer from communication and synchronization overhead if too many tokens are escalated.
 
-\subsection{RQ4: Domain Suitability}
-The evidence indicates that SLMs are most competitive in domain-specific and structured tasks, especially when retrieval, routing, or collaboration mechanisms are added. Strong application areas include telecom question answering, code-related tasks, downstream NLP tasks, industrial monitoring, and specialized scientific domains.
+\paragraph{Query-level or example-level routing.}
+OrchestraLLM exemplifies retrieval-based expert routing at the dialogue level~\cite{lee2024orchestrallm}. Similar logic appears in customer-review analysis and several question-answering systems. These designs are attractive when the system can identify ``easy'' and ``hard'' instances in a semantically meaningful way.
 
-By contrast, more general reasoning, open generation, and long-context understanding remain more challenging for smaller models. This suggests that domain specificity, task structure, and access to external support mechanisms are key factors in determining whether an SLM-centered design is sufficient.
+\paragraph{Retrieval-centered orchestration.}
+RAG is a major control mechanism in the corpus even when the website classifies a paper as hybrid rather than purely RAG. TeleOracle, RAP-RAG, ColBERT retrieval, and several domain QA systems use retrieval not only to expand context but also to constrain the action space of a smaller model. In these systems, retrieval functions as a coordination layer that substitutes for raw model scale by narrowing ambiguity and grounding the generated answer in domain evidence.
+
+\paragraph{Planner-based decomposition and agentic workflows.}
+Task decomposition is increasingly important in 2025 papers. Division-of-Thoughts uses a task decomposer, dependency graph, and plug-and-play adapter to allocate sub-tasks between local and remote models~\cite{shao2025dot}. FIPO uses an agentic workflow that generates structured feedback from multiple perspectives before updating the prompt of the small model~\cite{amarasinghe2025fipo}. Flight-deck support, aviation agents, bioinformatics agents, and resilient task-execution frameworks on the website all follow the same idea: if the task can be decomposed into specialists, small models can be retained in the loop even when a large model remains necessary somewhere in the pipeline.
+
+\paragraph{Fusion and multimodal coordination.}
+Not all orchestration is text-only. EnerSafe-Cap combines coarse-grained and fine-grained visual semantics through prompt-guided fusion~\cite{cao2025enersafe}. Molecular-property prediction papers also fuse language-model embeddings with graph-based features. In these settings, orchestration is best understood as structured fusion between heterogeneous experts.
+
+These patterns support a broader interpretation of orchestration. It is not merely an implementation detail added after choosing models. In the reviewed literature, orchestration is often the principal source of improvement. The best systems win because they know when to use the SLM, when to ask for help, when to retrieve evidence, and when to decompose the task. This is why the same small models can perform poorly in monolithic form but competitively when embedded in a better control architecture.
+
+\subsection{RQ4: Domain Suitability of SLM-Centered Systems}
+The corpus shows that SLM competitiveness is domain-dependent rather than universal. Small models are most successful when at least one of the following conditions holds: the domain vocabulary is narrow, the task is structurally constrained, domain retrieval can ground the generation process, the output is partially symbolic or template-like, or the system can escalate uncertain cases to a larger model.
+
+\paragraph{Telecom and networking.}
+Telecom is one of the clearest success stories for SLM-centered systems. TeleOracle and other reviewed telecom QA papers show that small models can perform well when standards documents are retrieved effectively and the generator is trained or prompted for domain fidelity~\cite{alabbasi2024teleoracle}. The reasons are intuitive: the domain is terminology-heavy, the relevant documents are accessible, and faithfulness matters at least as much as broad generative flexibility.
+
+\paragraph{Healthcare and scientific domains.}
+Healthcare results are mixed rather than uniformly positive. On the one hand, the website includes strong performance in radiology report labeling, chest X-ray reporting, VTE identification, multilingual medical summarization, and molecular property prediction. These are tasks with domain structure, labeled outputs, or strong contextual priors. On the other hand, the corpus also contains medical question-answering and diagnosis-generation settings where larger models remain more capable or where reasoning prompts drastically inflate latency. The lesson is not that healthcare favors one model scale universally, but that smaller models work best when the output space is constrained and domain knowledge can be tightly anchored.
+
+\paragraph{Reasoning, optimisation, and education.}
+Reasoning-heavy tasks produce some of the most interesting hybrid results. Mixed Distillation improves mathematical reasoning enough for 7B models to surpass GPT-3.5-Turbo on SVAMP~\cite{li2024mixed}. FIPO shows that even very weak baseline SLM performance on optimisation formulation can be transformed through feedback-guided prompt evolution~\cite{amarasinghe2025fipo}. Division-of-Thoughts and question-answering agents demonstrate that decomposition and selective allocation can keep small models viable on reasoning workloads that would be implausible in a single-pass local-only setup~\cite{shao2025dot}. These studies suggest that small models are not inherently incapable of reasoning; rather, they are highly sensitive to scaffolding.
+
+\paragraph{Code, software, and agentic tasks.}
+The website includes several code-related or software-oriented studies, including code correction, type and call-graph analysis, offline robotic decision-making, task-executing multi-agent systems, and academic feedback generation. These tasks often reward decomposition, specialist routing, or domain grounding more than sheer model size. Still, several reviewed systems note that performance drops as task complexity increases, especially when the agent must synthesize many steps or maintain long interaction histories.
+
+\paragraph{Multimodal industrial monitoring.}
+EnerSafe-Cap illustrates a particularly important case because it is not a conventional text benchmark~\cite{cao2025enersafe}. In industrial video monitoring, the hybrid system outperforms both the lightweight and the larger baseline models because the task benefits from two complementary forms of attention: one to continuity and one to salient detail. This suggests that in multimodal domains, the question is often not whether the small model can replace the large one, but whether each can capture a different slice of the evidence.
+
+\paragraph{Failure modes and limitations.}
+The domain analysis also reveals several failure modes. Small models struggle most when the task requires broad open-domain knowledge, long-context synthesis without strong retrieval, or flexible reasoning over ambiguous instructions. They also become brittle when prompt structure matters too much or when coordination modules are themselves inaccurate. A central finding of the review is therefore that SLM suitability should be evaluated as a property of \emph{system design plus domain}, not as a stable property of parameter count alone.
+
+\subsection{Cross-RQ Synthesis}
+Viewed together, the four research questions suggest that the literature is converging toward a specific systems principle: hybrid language-model design works best when the large model is treated as a selectively invoked capability rather than the default engine for every token, query, or subtask.
+
+The first implication is architectural. Strong results are associated with explicit control layers such as routers, planners, retrievers, or fusion modules. This means that future progress is unlikely to come only from making SLMs slightly larger or LLMs slightly cheaper. It will also depend on better confidence estimation, task decomposition, retrieval selection, and cross-model scheduling.
+
+The second implication is methodological. Because accuracy dominates reporting, many papers overstate practical efficiency. The corpus already contains cases where stronger orchestration clearly reduces cost or latency, but it also contains cases where coordination shifts the bottleneck rather than removing it. A mature evaluation protocol should therefore report resource metrics as first-class outcomes rather than optional extras.
+
+The third implication is application-oriented. The most successful SLM-centered deployments are not generic substitutes for LLMs. They are domain-adapted systems in which the small model is grounded, specialized, or protected by escalation logic. This is why telecom, structured reasoning, radiology labeling, optimisation formulation, and industrial monitoring are so prominent in the positive findings of the corpus.
 
 \section{Threats to Validity}
-This review has several validity threats that should be acknowledged clearly in the final paper.
+The review has several threats to validity that should be stated explicitly in a conference submission.
 
-\textbf{Search bias.} Although Web of Science offers a strong and reproducible starting point, relying on one primary database can omit relevant studies indexed elsewhere.
+\textbf{Search and source coverage.} The review workflow is centered on Web of Science. This supports reproducibility, but it also creates a database-selection bias. Important papers may exist in venues or repositories that were not captured by the query design or the chosen indexing source.
 
-\textbf{Screening bias.} Inclusion and exclusion decisions can be affected by reviewer judgment, especially for papers that partially report model size, architecture, or evaluation setup.
+\textbf{Rapid temporal drift.} The field evolves quickly, and the reviewed website snapshot already shows how unstable the time boundary can become. The corpus is dominated by 2025 studies, contains early-2026 items, and also includes minor metadata anomalies. This does not invalidate the synthesis, but it means that the final submission must state the exact screening cut-off date with precision.
 
-\textbf{Reporting bias.} Many primary studies do not report latency, cost, and energy in consistent formats, which weakens direct quantitative comparison.
+\textbf{Extraction bias.} The structured extraction matrix is a strength because it makes synthesis possible, but it also compresses complex papers into a limited schema. For example, a ``hybrid'' system can mean token-level speculative inference, RAG with a small generator, multimodal fusion, or a multi-agent workflow. Collapsing these under shared labels can hide important mechanistic differences.
 
-\textbf{Temporal bias.} The literature on SLMs and LLMs evolves rapidly, so the corpus can become outdated quickly unless the review window is clearly stated and updated before submission.
+\textbf{Metric incomparability.} Latency, cost, and energy are reported in inconsistent forms. Some papers report milliseconds, some report seconds, some report FLOPs, some report API cost, and many report only qualitative statements. This limits quantitative comparison even when the literature strongly claims efficiency benefits.
 
-\textbf{Extraction bias.} Mapping results from heterogeneous studies into a common extraction schema may simplify nuanced methodological differences across papers.
+\textbf{Publication and reporting bias.} Hybrid systems with positive results are more likely to be written up and extracted than negative or inconclusive designs. Furthermore, many papers highlight percentage improvements without reporting full deployment conditions, which can make the apparent gains look more general than they are.
+
+\textbf{Interpretive bias in representative-paper analysis.} To strengthen the manuscript beyond the website's key-finding summaries, a subset of representative PDFs was inspected. This improves depth, but it also introduces a judgment call about which papers deserve closer attention. The mitigation used here was to choose studies that cover different domains and orchestration styles rather than only the strongest positive cases.
 
 \section{Conclusion}
-This paper provides a structured systematic literature review of large and small language models across monolithic, hybrid, and multi-agent architectures. The review is organized around performance, efficiency, orchestration, and domain suitability, and it is grounded in a PRISMA-guided and Web of Science-centered methodology.
+This paper presented a systematic literature review of large language models and small language models across monolithic, hybrid, multi-agent, ensemble, and retrieval-centered architectures. The review was structured around four questions: comparative performance, efficiency, orchestration, and domain suitability. The reanalysis of the 54-paper website corpus shows a field that is rapidly expanding, strongly concentrated in 2025, and increasingly organized around selective cooperation between small and large models rather than direct head-to-head replacement.
 
-The current evidence suggests that SLMs are most effective when used in carefully designed collaborative systems or domain-specific workflows rather than as universal replacements for LLMs. The final version of the paper should strengthen this conclusion with complete citations, finalized corpus statistics, and a polished cross-study synthesis of the extracted quantitative evidence.
+The main technical conclusion is that SLMs are most effective when they are embedded in a well-designed system. Retrieval, routing, uncertainty estimation, task decomposition, prompt optimisation, and multimodal fusion repeatedly appear as the mechanisms that allow small models to recover or approach large-model quality. In many reviewed cases, the decisive variable is not the raw parameter count but the quality of the coordination logic around the model.
 
-% Uncomment these lines when the bibliography file is ready.
-% \bibliographystyle{splncs04}
-% \bibliography{references}
+The main methodological conclusion is that the literature is ahead in architectural creativity but behind in evaluation standardization. Accuracy is almost universally reported, but latency, cost, and energy are not. For future research, the most urgent needs are standardized resource reporting, better working definitions of what counts as an SLM in practice, and domain-grounded benchmarks that reflect deployment constraints.
+
+From a conference perspective, the strongest message of this review is pragmatic: SLMs are not universal replacements for LLMs, and LLMs are not the inevitable answer to every language task. The reviewed evidence supports a third position in which well-designed hybrid systems deliver the best trade-off between capability, controllability, and deployability.
+
+\begin{thebibliography}{9}
+\bibitem{hao2024hybrid}
+Hao, Z., Jiang, H., Jiang, S., Ren, J., Cao, T.: Hybrid SLM and LLM for Edge-Cloud Collaborative Inference. In: Workshop on Edge and Mobile Foundation Models and Workshop on Mobile Computing with Large Language Models (EdgeFM '24). ACM, New York (2024)
+
+\bibitem{oh2025uncertainty}
+Oh, S., Kim, J., Park, J., Ko, S.-W., Quek, T.Q.S., Kim, S.-L.: Uncertainty-Aware Hybrid Inference with On-Device Small and Remote Large Language Models. arXiv preprint arXiv:2412.12687 (2025)
+
+\bibitem{alabbasi2024teleoracle}
+Alabbasi, N., Erak, O., Alhussein, O., Lotfi, I., Muhaidat, S., Debbah, M.: TeleOracle: Fine-Tuned Retrieval-Augmented Generation with Long-Context Support for Networks. arXiv preprint arXiv:2411.02617 (2024)
+
+\bibitem{lee2024orchestrallm}
+Lee, C.-H., Cheng, H., Ostendorf, M.: OrchestraLLM: Efficient Orchestration of Language Models for Dialogue State Tracking. arXiv preprint arXiv:2311.09758 (2024)
+
+\bibitem{shao2025dot}
+Shao, C., Lin, Y., Hu, X., Xu, F.: Division-of-Thoughts: Harnessing Hybrid Language Model Synergy for Efficient On-Device Agents. In: Proceedings of the ACM Web Conference 2025. ACM, New York (2025)
+
+\bibitem{cao2025enersafe}
+Cao, Q., Li, C., Shi, H.: Toward Energy-Safe Industrial Monitoring: A Hybrid Language Model Framework for Video Captioning. Applied Sciences \textbf{15}, 12848 (2025)
+
+\bibitem{amarasinghe2025fipo}
+Amarasinghe, P.T., Nguyen, S., Sun, Y., Alahakoon, D.: Feedback-integrated Prompt Optimiser for Problem Formulation. Scientific Reports \textbf{15}, 43543 (2025)
+
+\bibitem{li2024mixed}
+Li, C., Chen, Q., Li, L., Wang, C., Li, Y., Chen, Z., Zhang, Y.: Mixed Distillation Helps Smaller Language Model Better Reasoning. arXiv preprint arXiv:2312.10730 (2024)
+
+\bibitem{page2021prisma}
+Page, M.J., McKenzie, J.E., Bossuyt, P.M., Boutron, I., Hoffmann, T.C., Mulrow, C.D., et al.: The PRISMA 2020 statement: an updated guideline for reporting systematic reviews. BMJ \textbf{372}, n71 (2021)
+\end{thebibliography}
 
 \end{document}
