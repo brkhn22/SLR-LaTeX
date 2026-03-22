@@ -1,0 +1,92 @@
+\section{Research Methodology}
+\subsection{Review Protocol}
+The study follows a PRISMA 2020-guided review design~\cite{page2021prisma}. The workflow used on the review website separates the process into identification, screening, and inclusion, with explicit reference to a Web of Science-centered search strategy. In the identification phase, query construction combines the key concepts of ``small language models'', ``large language models'', ``hybrid architectures'', ``multi-agent systems'', ``orchestration'', and ``collaboration'' using Boolean operators. In the screening phase, records are deduplicated, reviewed at title and abstract level, and then assessed at full text. In the inclusion phase, the selected studies are coded into a structured extraction sheet and then used to answer the research questions.
+
+The website also makes an important methodological choice explicit: the review is not organized as a generic survey of all SLM work, but as a filtered corpus intended to support a comparison between monolithic, hybrid, and agentic designs. This matters because it shapes both what is included and how the findings are interpreted. Studies are not only selected because they use small models; they are selected because they help answer questions about comparative performance, orchestration, and efficiency.
+
+\subsection{Inclusion and Exclusion Criteria}
+The inclusion criteria extracted from the website can be summarized as follows. A study is included if it examines SLMs alone or SLM + LLM architectures, fits the project's small-model definition, focuses on at least one relevant technical question such as performance or orchestration, falls inside the contemporary review window, and provides empirical evaluation. These criteria are narrow enough to keep the corpus technically coherent while broad enough to admit retrieval-centered, multi-agent, and fusion-based systems.
+
+The exclusion criteria remove five types of work: purely large-model comparisons with no SLM component, closed-box studies with insufficient transparency, non-technical ethical or regulatory discussions with no technical validation, studies outside the review time window, and purely theoretical work without experiments. Together, these choices bias the corpus toward deployable systems and measured outcomes, which is appropriate for the present research questions.
+
+\subsection{Corpus Profile}
+The current website snapshot contains 54 reviewed papers. The corpus is strongly concentrated in 2025, with 38 studies from that year, 11 from 2024, 2 from 2026, and a very small remainder in 2023 or metadata-anomalous records.
+
+Architecturally, the corpus is not dominated by one single paradigm. Using the website's own filtering logic, 18 papers can be grouped as hybrid, 14 as single-model systems, 12 as multi-agent systems, 6 as ensembles, and 4 as RAG-centered systems. This matters because it shows that the field is not converging on a single ``best'' way to combine small and large models. Instead, the literature currently explores multiple control granularities, ranging from token-level speculative verification to query-level routing, sub-task decomposition, and representation fusion.
+
+The corpus also reveals a strong reporting asymmetry. Accuracy or task-quality measures are reported in 51 of the 54 studies. In contrast, latency is reported in only 17, cost in only 5, and energy in only 4. This imbalance is central to interpreting the literature. Many papers claim efficiency benefits, but only a small subset actually report the variables needed to compare those claims rigorously across studies. Table~\ref{tab:corpus-overview} summarizes the corpus profile used in the review.
+
+\begin{table}[t]
+\caption{Corpus overview derived from the 54-paper website snapshot.}
+\label{tab:corpus-overview}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}X@{}}
+\toprule
+\textbf{Aspect} & \textbf{Observation} \\
+\midrule
+Corpus size & 54 reviewed papers. \\
+Publication trend & 2025 dominates the corpus (38 papers), followed by 2024 (11 papers). A very small remainder falls in 2023, 2026, or metadata-anomalous records. \\
+Architecture split & Hybrid: 18, Single-model: 14, Multi-agent: 12, Ensemble: 6, RAG-centered: 4. \\
+Most frequent SLM families & Llama, Qwen, BERT-family models, Phi, Mistral, T5, and Gemma appear most often in the extracted studies. \\
+Most frequent LLM families & GPT-4/GPT-4o, Llama, Qwen, GPT-3.5, Claude, and Gemini dominate the LLM side of the corpus. \\
+Reporting coverage & Accuracy/task quality: 51 papers; latency: 17; cost: 5; energy: 4. \\
+Recurring domains & Telecom QA, healthcare and radiology, mathematical reasoning, code and software tasks, dialogue systems, education, scientific prediction, and multimodal industrial monitoring. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Data Extraction and Synthesis Strategy}
+For each study, the website records the SLM and LLM models used, architecture type, orchestration method, agent count, task type, dataset, evaluation metrics, baselines, accuracy, latency, cost, energy, key findings, and limitations. These fields are sufficient for a structured narrative synthesis because they capture both the functional design of the system and the evidence used to justify it. Table~\ref{tab:rq-matrix} maps those extraction fields to the four research questions.
+
+\begin{table}[t]
+\caption{RQ $\times$ data extraction matrix used in the review. A check mark indicates that the field directly supports the corresponding research question.}
+\label{tab:rq-matrix}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xcccc@{}}
+\toprule
+\textbf{Extraction Field} & \textbf{RQ1} & \textbf{RQ2} & \textbf{RQ3} & \textbf{RQ4} \\
+\midrule
+Models Used (SLM) & $\checkmark$ &  &  & $\checkmark$ \\
+Models Used (LLM) & $\checkmark$ &  &  & $\checkmark$ \\
+Architecture & $\checkmark$ &  &  & $\checkmark$ \\
+Orchestration Method &  &  & $\checkmark$ & $\checkmark$ \\
+Agent Count &  & $\checkmark$ &  & $\checkmark$ \\
+Task Type & $\checkmark$ &  & $\checkmark$ &  \\
+Dataset & $\checkmark$ &  & $\checkmark$ &  \\
+Metrics & $\checkmark$ &  & $\checkmark$ & $\checkmark$ \\
+LLM Baseline & $\checkmark$ &  & $\checkmark$ & $\checkmark$ \\
+SLM Baseline & $\checkmark$ &  & $\checkmark$ & $\checkmark$ \\
+Accuracy & $\checkmark$ &  & $\checkmark$ &  \\
+Latency (ms) &  & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+Cost (\$) &  & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+Energy &  & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+Key Findings & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+Limitations &  & $\checkmark$ & $\checkmark$ &  \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The present manuscript uses that matrix in two steps. First, it performs corpus-level synthesis based on counts, categories, and recurring patterns across all 54 studies. Second, it supplements the compressed extraction fields with PDF-level inspection of representative papers where deeper context was needed. This second step was necessary for a conference-ready text because ``key findings'' alone are often too short to explain whether a method works because of routing, retrieval, task decomposition, multimodal fusion, or evaluation design. Table~\ref{tab:representative-studies} lists the representative primary studies used to deepen the review narrative.
+
+\begin{table}[t]
+\caption{Representative primary studies used to deepen the review narrative.}
+\label{tab:representative-studies}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{2.5cm}X@{}}
+\toprule
+\textbf{Study} & \textbf{Task / Setting} & \textbf{Representative Result} \\
+\midrule
+Hybrid SLM and LLM for Edge-Cloud Collaborative Inference~\cite{hao2024hybrid} & GSM8K, HumanEval, NaturalQuestions & Achieves LLM-comparable quality on GSM8K while using 25.8\% of full-cloud LLM cost; only about 3\% of tokens require LLM verification. \\
+Uncertainty-Aware Hybrid Inference~\cite{oh2025uncertainty} & On-device speculative inference & Preserves up to 97.54\% of LLM accuracy, reduces uplink transmissions and LLM computations by 45.93\%, and improves token throughput by 2.54$\times$. \\
+OrchestraLLM~\cite{lee2024orchestrallm} & Dialogue state tracking & Outperforms both SLM and LLM baselines while reducing computational cost by more than 50\%. \\
+TeleOracle~\cite{alabbasi2024teleoracle} & Telecom question answering & Improves Phi-2 to 81.20\% accuracy, roughly 30\% better than the base model, while remaining highly faithful to retrieved telecom context. \\
+Division-of-Thoughts~\cite{shao2025dot} & On-device agents and reasoning & Reduces average reasoning time by 66.12\% and API cost by 83.57\% while maintaining competitive task accuracy. \\
+EnerSafe-Cap~\cite{cao2025enersafe} & Industrial video captioning & Improves over SwinBERT by 19.49 SBERT points and over Qwen2-VL-2B by 8.27 SBERT points on VATEX. \\
+Mixed Distillation~\cite{li2024mixed} & Mathematical reasoning & Distilled 7B models outperform GPT-3.5-Turbo on SVAMP after combining CoT and PoT supervision signals. \\
+FIPO~\cite{amarasinghe2025fipo} & Automated optimisation problem formulation & Raises Qwen-2.5 performance from 3\% to 54\% on LPWP via feedback-guided prompt optimisation. \\
+\bottomrule
+\end{tabularx}
+\end{table}

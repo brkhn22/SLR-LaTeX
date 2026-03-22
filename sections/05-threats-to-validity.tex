@@ -1,0 +1,14 @@
+\section{Threats to Validity}
+The review has several threats to validity that should be stated explicitly in a conference submission.
+
+\textbf{Search and source coverage.} The review workflow is centered on Web of Science. This supports reproducibility, but it also creates a database-selection bias. Important papers may exist in venues or repositories that were not captured by the query design or the chosen indexing source.
+
+\textbf{Rapid temporal drift.} The field evolves quickly, and the reviewed website snapshot already shows how unstable the time boundary can become. The corpus is dominated by 2025 studies, contains early-2026 items, and also includes minor metadata anomalies. This does not invalidate the synthesis, but it means that the final submission must state the exact screening cut-off date with precision.
+
+\textbf{Extraction bias.} The structured extraction matrix is a strength because it makes synthesis possible, but it also compresses complex papers into a limited schema. For example, a ``hybrid'' system can mean token-level speculative inference, RAG with a small generator, multimodal fusion, or a multi-agent workflow. Collapsing these under shared labels can hide important mechanistic differences.
+
+\textbf{Metric incomparability.} Latency, cost, and energy are reported in inconsistent forms. Some papers report milliseconds, some report seconds, some report FLOPs, some report API cost, and many report only qualitative statements. This limits quantitative comparison even when the literature strongly claims efficiency benefits.
+
+\textbf{Publication and reporting bias.} Hybrid systems with positive results are more likely to be written up and extracted than negative or inconclusive designs. Furthermore, many papers highlight percentage improvements without reporting full deployment conditions, which can make the apparent gains look more general than they are.
+
+\textbf{Interpretive bias in representative-paper analysis.} To strengthen the manuscript beyond the website's key-finding summaries, a subset of representative PDFs was inspected. This improves depth, but it also introduces a judgment call about which papers deserve closer attention. The mitigation used here was to choose studies that cover different domains and orchestration styles rather than only the strongest positive cases.

@@ -1,5 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1773656944.0371 "samplepaper.tex" "samplepaper.pdf" "samplepaper" 1773656944.25944 0
+["pdflatex"] 1774139657.20018 "/Users/dogukantopcu/Desktop/Final Project/Springer_Lecture_Notes_in_Computer_Science/samplepaper.tex" "samplepaper.pdf" "samplepaper" 1774139658.24515 0
+  "/Users/dogukantopcu/Desktop/Final Project/Springer_Lecture_Notes_in_Computer_Science/samplepaper.tex" 1774139548.6845 1227 bbfd895a1436db4bc7e80fafc00bfd33 ""
   "/Users/dogukantopcu/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx0700.600pk" 1773619894.80537 17356 021fd418b1e1984b7e1ac7992356ed68 ""
   "/Users/dogukantopcu/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx0900.600pk" 1773618089.59812 22480 f5e47267f43de0f3ef95c00c243375a8 ""
   "/Users/dogukantopcu/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1000.600pk" 1773618088.63497 25396 59c03c5c56ffa29fb5065c20407b3a98 ""
@@ -71,8 +72,16 @@
   "/usr/local/texlive/2026basic/texmf-var/web2c/pdftex/pdflatex.fmt" 1773617360 2966197 e704d392c0640a13226a7531e1c34cc5 ""
   "/usr/local/texlive/2026basic/texmf.cnf" 1772405582 628 bbc09d6d38872d53c11bb48dc9b14e88 ""
   "llncs.cls" 1773600002 43402 5fb5a2dc40571aa40f3d199c00cbb986 ""
-  "samplepaper.aux" 1773656944.20215 6274 52fa0131da52366acad9e6dda5899914 "pdflatex"
-  "samplepaper.tex" 1773656936.95362 48190 c8572dd761c17633a216b5e09ef50dc9 ""
+  "samplepaper.aux" 1774139658.11407 6181 8ce76621da230d5e1edcffb0f4dcad4b "pdflatex"
+  "samplepaper.tex" 1774139548.6845 1227 bbfd895a1436db4bc7e80fafc00bfd33 ""
+  "sections/00-abstract.tex" 1774139548.68462 1603 89b466c0ebfe3bb034857f8868394083 ""
+  "sections/01-introduction.tex" 1774139548.68472 4568 6c7500a59b9b67e65940389b8c17cad6 ""
+  "sections/02-related-works.tex" 1774139548.68481 5120 68a7e76af13e2faa05e73f7ab2ba346b ""
+  "sections/03-research-methodology.tex" 1774139548.68491 9421 73afbc3e43674ac350c316cf37615750 ""
+  "sections/04-findings.tex" 1774139548.68534 20342 582f82ad8873c592e8d2eb972fd491e0 ""
+  "sections/05-threats-to-validity.tex" 1774139548.6855 2339 538ebbb2bc683b0c9be2a79e331bb701 ""
+  "sections/06-conclusion.tex" 1774139548.68578 1840 d7937237345675fa8ac09d871b179edd ""
+  "sections/07-references.tex" 1774139548.6859 2018 7344ccb6d2d333aeb893e19b8dc91426 ""
   (generated)
   "samplepaper.aux"
   "samplepaper.log"

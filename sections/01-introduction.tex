@@ -1,0 +1,27 @@
+\section{Introduction}
+Large language models have transformed natural language processing by making strong zero-shot and few-shot performance feasible across reasoning, summarisation, dialogue, code generation, and multimodal tasks. At the same time, their practical deployment remains constrained by memory footprint, inference latency, cloud dependency, and monetary cost. These constraints are especially pronounced in edge devices, real-time systems, privacy-sensitive domains, and industrial environments where model quality is only one part of the design problem.
+
+Small language models have therefore emerged as a complementary rather than purely competing paradigm. They are attractive because they can run locally, are often cheaper to adapt, and can be integrated more easily with domain-specific retrieval, task-specific fine-tuning, or explicit control modules. However, SLMs do not provide a uniform answer to the limitations of LLMs. In many settings they still underperform on open-ended reasoning, long-context understanding, or tasks that require broad world knowledge. The resulting design space is no longer a simple LLM-versus-SLM comparison. Instead, the field increasingly studies when to use an SLM alone, when to escalate to an LLM, and how to coordinate both in a hybrid or agentic pipeline.
+
+The current literature already contains many examples of this shift, including edge-cloud collaborative inference~\cite{hao2024hybrid}, uncertainty-aware speculative decoding~\cite{oh2025uncertainty}, telecom RAG~\cite{alabbasi2024teleoracle}, structured expert routing~\cite{lee2024orchestrallm}, on-device hybrid agents~\cite{shao2025dot}, multimodal industrial monitoring~\cite{cao2025enersafe}, and feedback-guided prompt optimisation~\cite{amarasinghe2025fipo}.
+
+These developments make a systematic review timely for three reasons. First, the literature is growing rapidly and is no longer limited to one type of collaboration mechanism. Second, the most important claims in the area are no longer only about accuracy, but also about compute, latency, cost, and deployability. Third, prior surveys tend to emphasize taxonomy and conceptual coverage, whereas system builders and researchers increasingly need a cross-study synthesis that clarifies what kinds of hybridization work, under what conditions, and with what trade-offs.
+
+This paper therefore asks a narrower and more engineering-focused question than a generic survey of language models. Rather than describing all possible SLM or LLM techniques, it investigates how SLMs and LLMs interact in recent systems, what orchestration patterns recur across the literature, and in which domains SLM-centered designs can realistically substitute for or complement larger models. The review pays particular attention to hybrid and multi-agent architectures because these systems are where the resource-performance trade-off becomes explicit.
+
+The main contributions of this review are as follows:
+\begin{itemize}
+\item It provides a structured synthesis of 54 studies covering standalone SLMs, monolithic LLMs, hybrid SLM--LLM systems, multi-agent workflows, ensembles, and retrieval-centered architectures.
+\item It reframes the literature around four practical research questions: performance, efficiency, orchestration, and domain suitability.
+\item It translates the review website's extracted matrix into an analyzable corpus profile, including publication trends, architectural distributions, and reporting coverage for latency, cost, and energy.
+\item It strengthens broad corpus-level synthesis with representative primary studies whose PDFs were inspected to recover richer architectural and evaluation context.
+\end{itemize}
+
+\subsection{Research Questions}
+The review is guided by the following research questions:
+\begin{enumerate}
+\item \textbf{RQ1:} How does the performance of multi-agent SLMs or hybrid architectures (LLM + SLM) compare to single monolithic LLMs in reasoning, classification, and domain-specific tasks?
+\item \textbf{RQ2:} What is the impact of hybrid and multi-agent architectures on computational efficiency, especially inference cost, latency, and energy consumption, compared with monolithic models?
+\item \textbf{RQ3:} What orchestration, routing, retrieval, and decomposition mechanisms are used to manage the division of labor between large and small models?
+\item \textbf{RQ4:} In which domains do SLMs achieve performance comparable to LLMs, and in which domains do they still depend on escalation, retrieval, or strong hybrid support?
+\end{enumerate}
