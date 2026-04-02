@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.24)  2 APR 2026 22:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.24)  2 APR 2026 23:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -394,31 +394,13 @@ File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
 (./sections/00-abstract.tex) (./sections/01-introduction.tex [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-
-LaTeX Warning: Citation `chatzistefanidis2025symbiotic' on page 2 undefined on 
-input line 6.
-
-
-LaTeX Warning: Citation `han2025self' on page 2 undefined on input line 6.
-
-
-LaTeX Warning: Citation `pietrzak2025what' on page 2 undefined on input line 6.
-
-
-
-LaTeX Warning: Citation `pietrzak2025what' on page 2 undefined on input line 6.
-
-
-) (./sections/02-related-works.tex
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]) (./sections/02-related-wo
+rks.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-[3]) (./sections/03-research-methodology.tex
-
-LaTeX Warning: Citation `page2021prisma' on page 4 undefined on input line 3.
-
-[4] [5]) (./sections/04-findings.tex [6] [7]
+[3]) (./sections/03-research-methodology.tex [4] [5])
+(./sections/04-findings.tex [6] [7]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
 * paper: <default>
@@ -830,10 +812,10 @@ L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3741 strings out of 476182
- 56386 string characters out of 5795595
+ 3745 strings out of 476182
+ 56464 string characters out of 5795595
  2125975 words of memory out of 5000000
- 25670 multiletter control sequences out of 15000+600000
+ 25674 multiletter control sequences out of 15000+600000
  571918 words of font info for 69 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  66i,11n,67p,1464b,336s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -854,7 +836,7 @@ sfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
 7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb>
-Output written on samplepaper.pdf (24 pages, 254795 bytes).
+Output written on samplepaper.pdf (24 pages, 255431 bytes).
 PDF statistics:
  646 PDF objects out of 1000 (max. 8388607)
  116 compressed objects within 2 object streams
